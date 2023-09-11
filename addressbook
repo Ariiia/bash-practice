@@ -1,0 +1,33 @@
+#!/bin/bash
+
+case "$1" in
+	"new")
+		if [ "$(egrep -c "[A-Za-z]+\s[A-Za-z]+" <<< "$2"  )" -gt 0 ]\
+		&& [ "$(egrep -c "[A-Za-z0-9]+@[A-Za-z]+\.[A-Za-z]+" <<< "$3")" -gt 0 ];
+		then
+			echo "$2 $3"	>> book.txt;
+		else 
+			echo "Wrong format of email - name"
+		fi
+		;;
+	"list")
+		if [ "$(wc -l < book.txt)" -gt 0 ]; ## < to omit filename in output
+		then
+			cat book.txt
+		else
+			echo "Addressbook is empty"
+		fi
+		;;
+	"lookup")
+		grep -F -h "$2" book.txt;
+		;;
+	"clear")
+		cat /dev/null > book.txt
+		;;
+	"remove")
+		sed -i "/$2/d" book.txt
+		;;
+	*)
+		echo "Wrong command";
+		exit;;
+esac
